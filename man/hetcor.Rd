@@ -3,6 +3,7 @@
 \alias{hetcor.default}
 \alias{hetcor.data.frame}
 \alias{print.hetcor}
+\alias{as.matrix.hetcor}
 
 \title{Heterogeneous Correlation Matrix}
 \description{
@@ -12,11 +13,12 @@
 }
 
 \usage{
-hetcor(data, ..., ML = FALSE, std.err = TRUE)
+hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4)
 \method{hetcor}{data.frame}(data, ML = FALSE, std.err = TRUE, 
-  use = c("complete.obs", "pairwise.complete.obs"), ...)
-\method{hetcor}{default}(data, ..., ML = FALSE, std.err = TRUE)
+  use = c("complete.obs", "pairwise.complete.obs"), bins=4, ...)
+\method{hetcor}{default}(data, ..., ML = FALSE, std.err = TRUE, bins=4)
 \method{print}{hetcor}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{as.matrix}{hetcor}(x)
 }
 
 \arguments{
@@ -25,10 +27,11 @@ hetcor(data, ..., ML = FALSE, std.err = TRUE)
   \item{ML}{if \code{TRUE}, compute maximum-likelihood estimates;
     if \code{FALSE}, compute quick two-step estimates.}
   \item{std.err}{if \code{TRUE}, compute standard errors.}
+  \item{bins}{number of bins to use for continuous variables in testing bivariate normality; the default is 4.}
   \item{use}{if \code{"complete.obs"}, remove observations with any missing data; 
     if \code{"pairwise.complete.obs"}, compute each correlation using all observations with
     valid data for that pair of variables.}
-  \item{x}{an object of class \code{"hetcor"} to be printed.}
+  \item{x}{an object of class \code{"hetcor"} to be printed, or from which to extract the correlation matrix.}
   \item{digits}{number of significant digits.}
 }
 
@@ -38,6 +41,7 @@ hetcor(data, ..., ML = FALSE, std.err = TRUE)
   \item{type}{the type of each correlation: \code{"Pearson"}, \code{"Polychoric"}, or \code{"Polyserial"}.}
   \item{std.errors}{the standard errors of the correlations, if requested.}
   \item{n}{the number (or numbers) of observations on which the correlations are based.}
+  \items{tests}{p-values for tests of bivariate normality for each pair of variables.}
   \item{NA.method}{the method by which any missing data were handled: \code{"complete.obs"} 
     or \code{"pairwise.complete.obs"}.}
   \item{ML}{\code{TRUE} for ML estimates, \code{FALSE} for two-step estimates.}

@@ -1,7 +1,7 @@
-# last modified 5 Dec 04 by J. Fox
+# last modified 12 Dec 04 by J. Fox
 
 "hetcor.data.frame" <-
-function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.obs"), ...){
+function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.obs"), bins=4, ...){
   se.r <- function(r, n){
     rho <- r*(1 + (1 - r^2)/(2*(n - 3))) # approx. unbiased estimator
     v <- (((1 - rho^2)^2)/(n + 6))*(1 + (14 + 11*rho^2)/(2*(n + 6)))
@@ -16,6 +16,7 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
   Type <- matrix("", p, p)
   SE <- matrix(0, p, p)
   N <- matrix(0, p, p)
+  Test <- matrix(0, p, p)
   diag(N) <- if (use == "complete.obs") nrow(data)
              else sapply(data, function(x) sum(!is.na(x)))
   for (i in 2:p) {
@@ -23,13 +24,14 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
       x <- data[[i]]
       y <- data[[j]]
       if (inherits(x, c("numeric", "integer")) && inherits(y, c("numeric", "integer"))) {
-         r <- cor(x, y)
+         r <- cor(x, y, use="complete.obs")
          Type[i, j] <- Type[j, i] <- "Pearson"
          R[i, j] <- R[j, i] <- r
          if (std.err) {
            n <- sum(complete.cases(x, y))
            SE[i, j] <- SE[j, i] <- se.r(r, n)
            N[i, j] <- N[j, i] <- n
+           Test[i, j] <- pchisq(chisq(x, y, r, bins=bins), bins^2 - 2, lower.tail=FALSE)
            }
          }
       else if (inherits(x, "factor") && inherits(y, "factor")) {
@@ -40,14 +42,15 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
            R[i, j] <- R[j, i] <- result$rho
            SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
            N[i, j] <- N[j, i] <- n
+           Test[i, j] <- pchisq(result$chisq, result$df, lower.tail=FALSE)
            }
          else R[i, j] <- R[j, i] <- result
          }
        else {
          if (inherits(x, "factor") && inherits(y, c("numeric", "integer")))
-           result <- polyserial(y, x, ML=ML, std.err=std.err)
+           result <- polyserial(y, x, ML=ML, std.err=std.err, bins=bins)
          else if (inherits(x, c("numeric", "integer")) && inherits(y, "factor"))
-           result <- polyserial(x, y, ML=ML, std.err=sted.err)
+           result <- polyserial(x, y, ML=ML, std.err=std.err, bins=bins)
          else {
              stop("columns must be numeric or factors.")
              }
@@ -57,6 +60,7 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
            R[i, j] <- R[j, i] <- result$rho
            SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
            N[i, j] <- N[j, i] <- n
+           Test[i, j] <- pchisq(result$chisq, result$df, lower.tail=FALSE)
            }
          else R[i, j] <- R[j, i] <- result
          }
@@ -67,8 +71,10 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
    if (std.err) {
      rownames(SE) <- colnames(SE) <- names(data)
      rownames(N) <- colnames(N) <- names(N)
+     rownames(Test) <- colnames(Test) <- names(data)
      result$std.errors <- SE
      result$n <- if (use == "complete.obs") n else N
+     result$tests <- Test
      }
    class(result) <- "hetcor"
    result

@@ -36,6 +36,8 @@ polychor(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999)
   \item{var}{the estimated variance of the correlation, or, for the ML estimate, 
     the estimated covariance matrix of the correlation and thresholds.}
   \item{n}{the number of observations on which the correlation is based.}
+  \item{chisq}{chi-square test for bivariate normality.}
+  \item{df}{degrees of freedom for the test of bivariate normality.}
   \item{ML}{\code{TRUE} for the ML estimate, \code{FALSE} for the two-step estimate.}
   Othewise, returns the polychoric correlation.
 }

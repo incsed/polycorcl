@@ -1,4 +1,4 @@
-version 0.5: original version
+version 0.5: original version on CRAN
 
 version 0.6-0
 
@@ -9,4 +9,15 @@ o  corrected bug constraining quick estimates in polychor() to 0,1 rather than -
 o  constraints on correlations (default to -.9999,.9999) for numeric stability.
 
 o  several small changes.
+
+version 0.7-0
+
+o  added tests of bivariate normality.
+
+o  added as.matrix.hetcor().
+
+o  fixed bug that caused use="pairwise.complete.obs" in hetcor() to fail.
+
+o  cleaned up code.
+
 

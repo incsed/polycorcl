@@ -1,7 +1,7 @@
-# last modified 5 Dec 04 by J. Fox
+# last modified 12 Dec 04 by J. Fox
 
 "polyserial" <-
-function(x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
+function(x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999, bins=4){
   f <- function(pars){
     rho <- pars[1]
     if (abs(rho) > maxcor) rho <- sign(rho)*maxcor
@@ -23,29 +23,37 @@ function(x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
   cuts <- qnorm(cumsum(tab)/n)[-s]
   y <- as.numeric(as.factor(y))
   rho <- sqrt((n - 1)/n)*sd(y)*cor(x, y)/sum(dnorm(cuts))
-  if (!ML) {
+  if (ML) {
+    result <- optim(c(rho, cuts), f, control=control, hessian=std.err)
     if (std.err){
-      result <- optim(rho, f, control=control, hessian=TRUE, method="BFGS")
-      result <- list(type="polyserial",
-                   rho=result$par,
-                   var=1/result$hessian,
-                   n=n,
-                   ML=FALSE)
-      class(result) <- "polycor"
-      return(result)
-      }
-    else return(rho)
+        chisq <- chisq(y, z, result$par[1], result$par[-1], bins=bins)
+        df <- s*bins - s  - 1
+        result <- list(type="polyserial",
+                    rho=result$par[1],
+                    cuts=result$par[-1],
+                    var=solve(result$hessian),
+                    n=n,
+                    chisq=chisq,
+                    df=df,
+                    ML=TRUE)
+        class(result) <- "polycor"
+        return(result)
+        }
+    else return(as.vector(result$par[1]))  
     }
-  result <- optim(c(rho, cuts), f, control=control, hessian=std.err)
-  if (std.err){
+  else if (std.err){
+    result <- optim(rho, f, control=control, hessian=TRUE, method="BFGS")
+    chisq <- chisq(y, z, rho, cuts, bins=bins)
+    df <- s*bins - s  - 1
     result <- list(type="polyserial",
-                   rho=result$par[1],
-                   cuts=result$par[-1],
-                   var=solve(result$hessian),
-                   n=n,
-                   ML=TRUE)
+                rho=result$par,
+                var=1/result$hessian,
+                n=n,
+                chisq=chisq,
+                df=df,
+                ML=FALSE)
     class(result) <- "polycor"
     return(result)
     }
-  else return(as.vector(result$par[1]))
+  else rho
   }

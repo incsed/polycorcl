@@ -1,4 +1,4 @@
-# last modified 5 Dec 04 by J. Fox
+# last modified 10 Dec 04 by J. Fox
 
 "print.polycor" <-
 function(x, digits = max(3, getOption("digits") - 3), ...){
@@ -7,7 +7,10 @@ function(x, digits = max(3, getOption("digits") - 3), ...){
     se.rho <- se[1]
     est <- if (x$ML) "ML est." else "2-step est."
     cat("\nPolychoric Correlation, ", est, " = ", signif(x$rho, digits),
-      " (", signif(se.rho, digits), ")\n", sep="")
+      " (", signif(se.rho, digits), ")", sep="")
+    cat("\nTest of bivariate normality: Chisquare = ", signif(x$chisq, digits),
+      ", df = ", x$df, ", p = ", signif(pchisq(x$chisq, x$df, lower.tail=FALSE), digits),
+      "\n", sep="")
     r <- length(x$row.cuts)
     c <- length(x$col.cuts)
     if (r == 0) return(invisible(x))
@@ -29,7 +32,10 @@ function(x, digits = max(3, getOption("digits") - 3), ...){
     se.rho <- se[1]
     est <- if (x$ML) "ML est." else "2-step est."
     cat("\nPolyserial Correlation, ", est, " = ", signif(x$rho, digits),
-      " (", signif(se.rho, digits), ")\n\n", sep="")
+      " (", signif(se.rho, digits), ")", sep="")
+    cat("\nTest of bivariate normality: Chisquare = ", signif(x$chisq, digits),
+      ", df = ", x$df, ", p = ", signif(pchisq(x$chisq, x$df, lower.tail=FALSE), digits),
+      "\n\n", sep="")
     if (length(se) == 1) return(invisible(x))
     cuts.se <- se[-1]
     thresh <- signif(rbind(x$cuts, cuts.se), digits)

@@ -12,7 +12,7 @@
   estimator the estimates of the thresholds and the covariance matrix of the estimates are also available.
 }
 \usage{
-polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999)
+polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999, bins=4)
 }
 
 \arguments{
@@ -25,6 +25,7 @@ polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999)
   \item{std.err}{if \code{TRUE}, return the estimated variance of the correlation (for the two-step estimator)
     or the estimated covariance matrix of the correlation and thresholds (for the ML estimator); the default is \code{FALSE}.}
   \item{maxcor}{maximum absolute correlation (to insure numerical stability).}
+  \item{bins}{the number of bins into which to dissect \code{x} for a test of bivariate normality; the default is 4.}
 }
 
 }
@@ -37,6 +38,8 @@ polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999)
   \item{var}{the estimated variance of the correlation, or, for the ML estimator, \
     the estimated covariance matrix of the correlation and thresholds.}
   \item{n}{the number of observations on which the correlation is based.}
+  \item{chisq}{chi-square test for bivariate normality.}
+  \item{df}{degrees of freedom for the test of bivariate normality.}
   \item{ML}{\code{TRUE} for the ML estimate, \code{FALSE} for the two-step estimate.}
   Othewise, returns the polyserial correlation.
 }

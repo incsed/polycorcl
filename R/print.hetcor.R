@@ -1,4 +1,4 @@
-# last modified 5 Dec 04 by J. Fox
+# last modified 12 Dec 04 by J. Fox
 
 "print.hetcor" <-
 function(x, digits = max(3, getOption("digits") - 3), ...){
@@ -26,6 +26,12 @@ function(x, digits = max(3, getOption("digits") - 3), ...){
       cat("\nStandard Errors/Numbers of Observations:\n")
       print(SE)
       }
+    Test <- signif(x$tests, digits)
+    Test[upper.tri(Test)] <- ""
+    diag(Test) <- ""
+    Test <- as.data.frame(Test)
+    cat("\nP-values for Tests of Bivariate Normality:\n")
+    print(Test[,-ncol(Test)])
     }
   invisible(x)
   }
