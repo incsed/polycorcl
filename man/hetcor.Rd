@@ -6,23 +6,25 @@
 
 \title{Heterogeneous Correlation Matrix}
 \description{
-  Compute a heterogenous correlation matrix, consisting of Pearson product-moment
+  Computes a heterogenous correlation matrix, consisting of Pearson product-moment
   correlations between numeric variables, polyserial correlations between numeric 
   and ordinal variables, and polychoric correlations between ordinal variables.
 }
 
 \usage{
-hetcor(data, ..., ML = FALSE)
-\method{hetcor}{data.frame}(data, ML = FALSE, use = c("complete.obs", "pairwise.complete.obs"), ...)
-\method{hetcor}{default}(data, ..., ML = FALSE)
+hetcor(data, ..., ML = FALSE, std.err = TRUE)
+\method{hetcor}{data.frame}(data, ML = FALSE, std.err = TRUE, 
+  use = c("complete.obs", "pairwise.complete.obs"), ...)
+\method{hetcor}{default}(data, ..., ML = FALSE, std.err = TRUE)
 \method{print}{hetcor}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \arguments{
   \item{data}{a data frame consisting of factors and/or numeric variables, or the first of several variables.}
   \item{\dots}{variables and/or arguments to be passed down.}
-  \item{ML}{if \code{TRUE} compute maximum-likelihood estimates and their standard errors;
+  \item{ML}{if \code{TRUE}, compute maximum-likelihood estimates;
     if \code{FALSE}, compute quick two-step estimates.}
+  \item{std.err}{if \code{TRUE}, compute standard errors.}
   \item{use}{if \code{"complete.obs"}, remove observations with any missing data; 
     if \code{"pairwise.complete.obs"}, compute each correlation using all observations with
     valid data for that pair of variables.}
@@ -34,10 +36,11 @@ hetcor(data, ..., ML = FALSE)
   Returns an object of class \code{"hetcor"} with the following components:
   \item{correlations}{the correlation matrix.}
   \item{type}{the type of each correlation: \code{"Pearson"}, \code{"Polychoric"}, or \code{"Polyserial"}.}
-  \item{std.errors}{the standard errors of the correlations, if estimated by ML.}
+  \item{std.errors}{the standard errors of the correlations, if requested.}
   \item{n}{the number (or numbers) of observations on which the correlations are based.}
   \item{NA.method}{the method by which any missing data were handled: \code{"complete.obs"} 
     or \code{"pairwise.complete.obs"}.}
+  \item{ML}{\code{TRUE} for ML estimates, \code{FALSE} for two-step estimates.}
 }
 
 \author{John Fox \email{jfox@mcmaster.ca}}

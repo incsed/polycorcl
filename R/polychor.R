@@ -1,13 +1,17 @@
+# last modified 5 Dec 04 by J. Fox
+
 "polychor" <-
-function (x, y, ML=FALSE, control=list(), std.err=FALSE){
+function (x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
   f <- function(pars) {
     if (length(pars) == 1){
        rho <- pars
+       if (abs(rho) > maxcor) rho <- sign(rho)*maxcor
        row.cuts <- c(-Inf, rc, Inf)
        col.cuts <- c(-Inf, cc, Inf)
        }
      else {
        rho <- pars[1]
+       if (abs(rho) > maxcor) rho <- sign(rho)*maxcor
        row.cuts <- c(-Inf, pars[2:r], Inf)
        col.cuts <- c(-Inf, pars[(r+1):(r+c-1)], Inf)
        }
@@ -29,7 +33,7 @@ function (x, y, ML=FALSE, control=list(), std.err=FALSE){
   rc <- qnorm(cumsum(rowSums(tab))/n)[-r]
   cc <- qnorm(cumsum(colSums(tab))/n)[-c]
   if (ML) {
-    result <- optim(c(optimise(f, interval=c(0, 1))$minimum, rc, cc), f,
+    result <- optim(c(optimise(f, interval=c(-1, 1))$minimum, rc, cc), f,
       control=control, hessian=std.err)
     if (std.err) {
       result <- list(type="polychoric",
@@ -37,12 +41,22 @@ function (x, y, ML=FALSE, control=list(), std.err=FALSE){
                      row.cuts=result$par[2:r],
                      col.cuts=result$par[(r+1):(r+c-1)],
                      var=solve(result$hessian),
-                     n=n)
+                     n=n,
+                     ML=TRUE)
       class(result) <- "polycor"
       return(result)
       }
     else return(as.vector(result$par[1]))
     }
-  else optimise(f, interval=c(0, 1))$minimum
+  else if (std.err){
+    result <- optim(0, f, control=control, hessian=TRUE, method="BFGS")
+    result <- list(type="polychoric",
+                     rho=result$par,
+                     var=1/result$hessian,
+                     n=n,
+                     ML=FALSE)
+    class(result) <- "polycor"
+    return(result)
+    }
+  else optimise(f, interval=c(-1, 1))$minimum
   }
-

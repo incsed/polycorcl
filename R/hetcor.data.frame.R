@@ -1,5 +1,7 @@
+# last modified 5 Dec 04 by J. Fox
+
 "hetcor.data.frame" <-
-function(data, ML=FALSE, use=c("complete.obs", "pairwise.complete.obs"), ...){
+function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.obs"), ...){
   se.r <- function(r, n){
     rho <- r*(1 + (1 - r^2)/(2*(n - 3))) # approx. unbiased estimator
     v <- (((1 - rho^2)^2)/(n + 6))*(1 + (14 + 11*rho^2)/(2*(n + 6)))
@@ -24,7 +26,7 @@ function(data, ML=FALSE, use=c("complete.obs", "pairwise.complete.obs"), ...){
          r <- cor(x, y)
          Type[i, j] <- Type[j, i] <- "Pearson"
          R[i, j] <- R[j, i] <- r
-         if (ML) {
+         if (std.err) {
            n <- sum(complete.cases(x, y))
            SE[i, j] <- SE[j, i] <- se.r(r, n)
            N[i, j] <- N[j, i] <- n
@@ -32,8 +34,8 @@ function(data, ML=FALSE, use=c("complete.obs", "pairwise.complete.obs"), ...){
          }
       else if (inherits(x, "factor") && inherits(y, "factor")) {
          Type[i, j] <- Type[j, i] <- "Polychoric"
-         result <- polychor(x, y, ML=ML, std.err=TRUE)
-         if (ML){
+         result <- polychor(x, y, ML=ML, std.err=std.err)
+         if (std.err){
            n <- sum(complete.cases(x, y))
            R[i, j] <- R[j, i] <- result$rho
            SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
@@ -43,14 +45,14 @@ function(data, ML=FALSE, use=c("complete.obs", "pairwise.complete.obs"), ...){
          }
        else {
          if (inherits(x, "factor") && inherits(y, c("numeric", "integer")))
-           result <- polyserial(y, x, ML=ML, std.err=TRUE)
+           result <- polyserial(y, x, ML=ML, std.err=std.err)
          else if (inherits(x, c("numeric", "integer")) && inherits(y, "factor"))
-           result <- polyserial(x, y, ML=ML, std.err=TRUE)
+           result <- polyserial(x, y, ML=ML, std.err=sted.err)
          else {
              stop("columns must be numeric or factors.")
              }
          Type[i, j] <- Type[j, i] <- "Polyserial"
-         if (ML){
+         if (std.err){
            n <- sum(complete.cases(x, y))
            R[i, j] <- R[j, i] <- result$rho
            SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
@@ -61,15 +63,13 @@ function(data, ML=FALSE, use=c("complete.obs", "pairwise.complete.obs"), ...){
        }
      }
    rownames(R) <- colnames(R) <- names(data)
-   result <- list(correlations=R, type=Type)
-   if (ML) {
+   result <- list(correlations=R, type=Type, NA.method=use, ML=ML)
+   if (std.err) {
      rownames(SE) <- colnames(SE) <- names(data)
      rownames(N) <- colnames(N) <- names(N)
      result$std.errors <- SE
      result$n <- if (use == "complete.obs") n else N
-     result$NA.method <- use
      }
    class(result) <- "hetcor"
    result
    }
-

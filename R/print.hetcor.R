@@ -1,8 +1,12 @@
+# last modified 5 Dec 04 by J. Fox
+
 "print.hetcor" <-
 function(x, digits = max(3, getOption("digits") - 3), ...){
   R <- signif(x$correlations, digits=digits)
   R[upper.tri(R)] <- x$type[upper.tri(R)]
   R <- as.data.frame(R)
+  if (x$ML) cat("\nMaximum-Likelihood Estimates\n")
+  else cat("\nTwo-Step Estimates\n")
   cat("\nCorrelations/Type of Correlation:\n")
   print(R)
   if (!is.null(x$std.errors)){
@@ -12,7 +16,7 @@ function(x, digits = max(3, getOption("digits") - 3), ...){
       SE[upper.tri(SE)] <- ""
       cat("\nStandard Errors:\n")
       SE <- as.data.frame(SE)
-      print(SE)
+      print(SE[,-ncol(SE)])
       cat(paste("\nn =", x$n, "\n"))
       }
     else {
@@ -25,4 +29,3 @@ function(x, digits = max(3, getOption("digits") - 3), ...){
     }
   invisible(x)
   }
-

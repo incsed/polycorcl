@@ -4,14 +4,15 @@
 \title{Polyserial Correlation}
 
 \description{
-  Computes the polyserial correlation between a quantitative variable and an ordinal variables, based on the assumption
+  Computes the polyserial correlation (and its standard error)
+  between a quantitative variable and an ordinal variables, based on the assumption
   that the joint distribution of the quantitative variable and a latent continuous variable underlying the ordinal 
   variable is bivariate normal. Either
-  the maximum-likelihood estimator or a quicker ``two-step'' approximation are available. For the ML
+  the maximum-likelihood estimator or a quicker ``two-step'' approximation is available. For the ML
   estimator the estimates of the thresholds and the covariance matrix of the estimates are also available.
 }
 \usage{
-polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE)
+polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999)
 }
 
 \arguments{
@@ -20,21 +21,23 @@ polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE)
     or an ordered factor, but if a factor, its levels should be in proper order.}
   \item{ML}{if \code{TRUE}, compute the maximum-likelihood estimate; if \code{FALSE}, the default, compute a quicker
     ``two-step'' approximation.}
-  \item{control}{optional arguments to be passed to the \code{optim} function, which computes the ML estimate;
-    for \code{ML=TRUE} only.}
-  \item{std.err}{if \code{TRUE}, return the estimated covariance matrix of the correlation and
-    thresholds; used only if \code{ML=TRUE}; the default is \code{FALSE}.}
+  \item{control}{optional arguments to be passed to the \code{optim} function.}
+  \item{std.err}{if \code{TRUE}, return the estimated variance of the correlation (for the two-step estimator)
+    or the estimated covariance matrix of the correlation and thresholds (for the ML estimator); the default is \code{FALSE}.}
+  \item{maxcor}{maximum absolute correlation (to insure numerical stability).}
 }
 
 }
 \value{
-  If \code{ML} and \code{std.err} are both \code{TRUE}, 
+  If \code{std.err} is \code{TRUE}, 
   returns an object of class \code{"polycor"} with the following components:
   \item{type}{set to \code{"polyserial"}.}
   \item{rho}{the polyserial correlation.}
-  \item{cuts}{estimated thresholds for the ordinal variable (\code{y}).}
-  \item{var}{the estimated covariance matrix of the correlation and thresholds.}
+  \item{cuts}{estimated thresholds for the ordinal variable (\code{y}), for the ML estimator.}
+  \item{var}{the estimated variance of the correlation, or, for the ML estimator, \
+    the estimated covariance matrix of the correlation and thresholds.}
   \item{n}{the number of observations on which the correlation is based.}
+  \item{ML}{\code{TRUE} for the ML estimate, \code{FALSE} for the two-step estimate.}
   Othewise, returns the polyserial correlation.
 }
 

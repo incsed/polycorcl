@@ -1,0 +1,12 @@
+version 0.5: original version
+
+version 0.6-0
+
+o  added approximate standard errors for quick 2-step estimates.
+
+o  corrected bug constraining quick estimates in polychor() to 0,1 rather than -1,1.
+
+o  constraints on correlations (default to -.9999,.9999) for numeric stability.
+
+o  several small changes.
+

@@ -3,14 +3,15 @@
 
 \title{Polychoric Correlation}
 \description{
-  Computes the polychoric correlation between two ordinal variables or from their contingency table, under the 
+  Computes the polychoric correlation (and its standard error)
+  between two ordinal variables or from their contingency table, under the 
   assumption that the ordinal variables dissect continuous latent variables that are bivariate normal. Either
-  the maximum-likelihood estimator or a (possibly much) quicker ``two-step'' approximation are available. For the ML
-  estimator the estimates of the thresholds and the covariance matrix of the estimates are also available.
+  the maximum-likelihood estimator or a (possibly much) quicker ``two-step'' approximation is available. For the ML
+  estimator, the estimates of the thresholds and the covariance matrix of the estimates are also available.
 }
 
 \usage{
-polychor(x, y, ML = FALSE, control = list(), std.err = FALSE)
+polychor(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999)
 }
 
 \arguments{
@@ -19,21 +20,23 @@ polychor(x, y, ML = FALSE, control = list(), std.err = FALSE)
   \item{y}{if \code{x} is a variable, a second ordered categorical variable.}
   \item{ML}{if \code{TRUE}, compute the maximum-likelihood estimate; if \code{FALSE}, the default, compute a quicker
     ``two-step'' approximation.}
-  \item{control}{optional arguments to be passed to the \code{optim} function, which computes the ML estimate;
-    for \code{ML=TRUE} only.}
-  \item{std.err}{if \code{TRUE}, return the estimated covariance matrix of the correlation and
-    thresholds; used only if \code{ML=TRUE}; the default is \code{FALSE}.}
+  \item{control}{optional arguments to be passed to the \code{optim} function.}
+  \item{std.err}{if \code{TRUE}, return the estimated variance of the correlation (for the two-step estimator) 
+    or the estimated covariance matrix (for the ML estimator) of the correlation and thresholds; the default is \code{FALSE}.}
+  \item{maxcor}{maximum absolute correlation (to insure numerical stability).}
 }
 
 \value{
-  If \code{ML} and \code{std.err} are both \code{TRUE}, 
+  If \code{std.err} is \code{TRUE}, 
   returns an object of class \code{"polycor"} with the following components:
   \item{type}{set to \code{"polychoric"}.}
   \item{rho}{the polychoric correlation.}
-  \item{row.cuts}{estimated thresholds for the row variable (\code{x}).}
-  \item{col.cuts}{estimated thresholds for the column variable (\code{y}).}
-  \item{var}{the estimated covariance matrix of the correlation and thresholds.}
+  \item{row.cuts}{estimated thresholds for the row variable (\code{x}), for the ML estimate.}
+  \item{col.cuts}{estimated thresholds for the column variable (\code{y}), for the ML estimate.}
+  \item{var}{the estimated variance of the correlation, or, for the ML estimate, 
+    the estimated covariance matrix of the correlation and thresholds.}
   \item{n}{the number of observations on which the correlation is based.}
+  \item{ML}{\code{TRUE} for the ML estimate, \code{FALSE} for the two-step estimate.}
   Othewise, returns the polychoric correlation.
 }
 
