@@ -1,0 +1,6 @@
+export(hetcor, polychor, polyserial)
+S3method(hetcor, data.frame)
+S3method(hetcor, default)
+S3method(print, polycor)
+S3method(print, hetcor)
+

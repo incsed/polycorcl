@@ -1,0 +1,75 @@
+"hetcor.data.frame" <-
+function(data, ML=FALSE, use=c("complete.obs", "pairwise.complete.obs"), ...){
+  se.r <- function(r, n){
+    rho <- r*(1 + (1 - r^2)/(2*(n - 3))) # approx. unbiased estimator
+    v <- (((1 - rho^2)^2)/(n + 6))*(1 + (14 + 11*rho^2)/(2*(n + 6)))
+    sqrt(v)
+    }
+  use <- match.arg(use)
+  if (class(data) != "data.frame") stop("argument must be a data frame.")
+  if (use == "complete.obs") data <- na.omit(data)
+  p <- length(data)
+  if (p < 2) stop("fewer than 2 variables.")
+  R <- matrix(1, p, p)
+  Type <- matrix("", p, p)
+  SE <- matrix(0, p, p)
+  N <- matrix(0, p, p)
+  diag(N) <- if (use == "complete.obs") nrow(data)
+             else sapply(data, function(x) sum(!is.na(x)))
+  for (i in 2:p) {
+    for (j in 1:(i-1)){
+      x <- data[[i]]
+      y <- data[[j]]
+      if (inherits(x, c("numeric", "integer")) && inherits(y, c("numeric", "integer"))) {
+         r <- cor(x, y)
+         Type[i, j] <- Type[j, i] <- "Pearson"
+         R[i, j] <- R[j, i] <- r
+         if (ML) {
+           n <- sum(complete.cases(x, y))
+           SE[i, j] <- SE[j, i] <- se.r(r, n)
+           N[i, j] <- N[j, i] <- n
+           }
+         }
+      else if (inherits(x, "factor") && inherits(y, "factor")) {
+         Type[i, j] <- Type[j, i] <- "Polychoric"
+         result <- polychor(x, y, ML=ML, std.err=TRUE)
+         if (ML){
+           n <- sum(complete.cases(x, y))
+           R[i, j] <- R[j, i] <- result$rho
+           SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
+           N[i, j] <- N[j, i] <- n
+           }
+         else R[i, j] <- R[j, i] <- result
+         }
+       else {
+         if (inherits(x, "factor") && inherits(y, c("numeric", "integer")))
+           result <- polyserial(y, x, ML=ML, std.err=TRUE)
+         else if (inherits(x, c("numeric", "integer")) && inherits(y, "factor"))
+           result <- polyserial(x, y, ML=ML, std.err=TRUE)
+         else {
+             stop("columns must be numeric or factors.")
+             }
+         Type[i, j] <- Type[j, i] <- "Polyserial"
+         if (ML){
+           n <- sum(complete.cases(x, y))
+           R[i, j] <- R[j, i] <- result$rho
+           SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
+           N[i, j] <- N[j, i] <- n
+           }
+         else R[i, j] <- R[j, i] <- result
+         }
+       }
+     }
+   rownames(R) <- colnames(R) <- names(data)
+   result <- list(correlations=R, type=Type)
+   if (ML) {
+     rownames(SE) <- colnames(SE) <- names(data)
+     rownames(N) <- colnames(N) <- names(N)
+     result$std.errors <- SE
+     result$n <- if (use == "complete.obs") n else N
+     result$NA.method <- use
+     }
+   class(result) <- "hetcor"
+   result
+   }
+
