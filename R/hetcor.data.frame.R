@@ -42,7 +42,9 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
            R[i, j] <- R[j, i] <- result$rho
            SE[i, j] <- SE[j, i] <- sqrt(result$var[1,1])
            N[i, j] <- N[j, i] <- n
-           Test[i, j] <- pchisq(result$chisq, result$df, lower.tail=FALSE)
+           Test[i, j] <- if (result$df > 0)
+                pchisq(result$chisq, result$df, lower.tail=FALSE)
+                else NA
            }
          else R[i, j] <- R[j, i] <- result
          }

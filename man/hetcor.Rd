@@ -79,6 +79,7 @@ hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4)
 \seealso{\code{\link{polychor}}, \code{\link{polyserial}}}
 
 \examples{
+set.seed(12345)
 R <- matrix(0, 4, 4)
 R[upper.tri(R)] <- runif(6)
 diag(R) <- 1

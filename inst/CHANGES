@@ -20,4 +20,12 @@ o  fixed bug that caused use="pairwise.complete.obs" in hetcor() to fail.
 
 o  cleaned up code.
 
+version 0.7-1
+
+o  suppressed test of bivariate normality in 2 x 2 (tetrachoric) case (where there are 0 df for the test).
+
+o  examples, which use random data, now set the random-number-generator seed.
+
+o  small changes to printed output.
+
 

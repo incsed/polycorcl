@@ -12,7 +12,6 @@
 \method{print}{polycor}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{an object of class \code{polycor}, as returned by \code{polychor} 
     or \code{polyserial}.}
@@ -30,6 +29,7 @@
 \seealso{\code{\link{polychor}}, \code{\link{polyserial}}}
 
 \examples{
+set.seed(12345)
 data <- rmvnorm(1000, c(0, 0), matrix(c(1, .5, .5, 1), 2, 2))
 x <- data[,1]
 y <- data[,2]
