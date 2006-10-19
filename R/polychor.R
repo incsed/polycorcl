@@ -1,4 +1,4 @@
-# last modified 12 Dec 04 by J. Fox
+# last modified 19 Oct 06 by J. Fox
 
 "polychor" <-
 function (x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
@@ -21,6 +21,8 @@ function (x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
   tab <- if (missing(y)) x else table(x, y)
   r <- nrow(tab)
   c <- ncol(tab)
+  if (r < 1) stop("the table has fewer than 2 rows")
+  if (c < 2) stop("the table has fewer than 2 columns")
   n <- sum(tab)
   rc <- qnorm(cumsum(rowSums(tab))/n)[-r]
   cc <- qnorm(cumsum(colSums(tab))/n)[-c]

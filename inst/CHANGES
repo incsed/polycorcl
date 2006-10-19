@@ -28,4 +28,8 @@ o  examples, which use random data, now set the random-number-generator seed.
 
 o  small changes to printed output.
 
+version 0.7-2
+
+o  polychor() and polyserial() now report an error when a categorical variable has just one level (problem pointed out by David Barron).
+
 
