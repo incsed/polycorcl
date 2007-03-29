@@ -1,4 +1,4 @@
-# last modified 12 Dec 04 by J. Fox
+# last modified 29 Mar 07 by J. Fox
 
 binBvn <- function(rho, row.cuts, col.cuts, bins=4){  
     row.cuts <- if (missing(row.cuts)) c(-Inf, 1:(bins - 1)/bins, Inf) else  c(-Inf, row.cuts, Inf)
@@ -28,4 +28,4 @@ chisq <- function(x, y, rho, row.cuts, col.cuts, zerotol=1e-6, bins=4){
     2*sum(tab*log((tab + zerotol)/(P*n)))
     }
 
-as.matrix.hetcor <- function(x) x$correlations
+as.matrix.hetcor <- function(x, ...) x$correlations

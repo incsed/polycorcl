@@ -32,4 +32,8 @@ version 0.7-2
 
 o  polychor() and polyserial() now report an error when a categorical variable has just one level (problem pointed out by David Barron).
 
+version 0.7-3
+
+o  as.matrix.hetcor() now has a second argument, ..., to conform to the as.matrix() generic in R 2.5.0.
+
 

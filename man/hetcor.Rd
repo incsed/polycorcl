@@ -18,7 +18,7 @@ hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4)
   use = c("complete.obs", "pairwise.complete.obs"), bins=4, ...)
 \method{hetcor}{default}(data, ..., ML = FALSE, std.err = TRUE, bins=4)
 \method{print}{hetcor}(x, digits = max(3, getOption("digits") - 3), ...)
-\method{as.matrix}{hetcor}(x)
+\method{as.matrix}{hetcor}(x, ...)
 }
 
 \arguments{
