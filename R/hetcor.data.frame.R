@@ -1,7 +1,8 @@
-# last modified 12 Dec 04 by J. Fox
+# last modified 05 Dec 07 by J. Fox
 
 "hetcor.data.frame" <-
-function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.obs"), bins=4, ...){
+function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.obs"),
+  bins=4, pd=TRUE, ...){
   se.r <- function(r, n){
     rho <- r*(1 + (1 - r^2)/(2*(n - 3))) # approx. unbiased estimator
     v <- (((1 - rho^2)^2)/(n + 6))*(1 + (14 + 11*rho^2)/(2*(n + 6)))
@@ -67,6 +68,12 @@ function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs", "pairwise.complete.
          else R[i, j] <- R[j, i] <- result
          }
        }
+     }
+   if (pd && min(eigen(R, only.values=TRUE)$values) < 0){
+     cor <- nearcor(R)
+     if (!cor$converged) stop("attempt to make correlation matrix positive-definite failed")
+     warning("the correlation matrix has been adjusted to make it positive-definite")
+     R <- cor$cor
      }
    rownames(R) <- colnames(R) <- names(data)
    result <- list(correlations=R, type=Type, NA.method=use, ML=ML)

@@ -36,4 +36,10 @@ version 0.7-3
 
 o  as.matrix.hetcor() now has a second argument, ..., to conform to the as.matrix() generic in R 2.5.0.
 
+version 0.7-4
+
+o  hetcor() uses the nearcor() function in sfsmisc to insure that the correlation matrix returned is positive-definite.
+
+o  small changes.
+
 

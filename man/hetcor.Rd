@@ -13,10 +13,10 @@
 }
 
 \usage{
-hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4)
+hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4, pd=TRUE)
 \method{hetcor}{data.frame}(data, ML = FALSE, std.err = TRUE, 
-  use = c("complete.obs", "pairwise.complete.obs"), bins=4, ...)
-\method{hetcor}{default}(data, ..., ML = FALSE, std.err = TRUE, bins=4)
+  use = c("complete.obs", "pairwise.complete.obs"), bins=4, pd=TRUE, ...)
+\method{hetcor}{default}(data, ..., ML = FALSE, std.err = TRUE, bins=4, pd=TRUE)
 \method{print}{hetcor}(x, digits = max(3, getOption("digits") - 3), ...)
 \method{as.matrix}{hetcor}(x, ...)
 }
@@ -28,6 +28,10 @@ hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4)
     if \code{FALSE}, compute quick two-step estimates.}
   \item{std.err}{if \code{TRUE}, compute standard errors.}
   \item{bins}{number of bins to use for continuous variables in testing bivariate normality; the default is 4.}
+  \item{pd}{if \code{TRUE} and if the correlation matrix is not positive-definite,
+    an attempt will be made to adjust it to a
+    positive-definite matrix, using the \code{\link[sfsmisc]{nearcor}} function in the \code{sfsmisc} package.
+    Note that default arguments to \code{nearcor} are used; for more control call \code{nearcor} directly.}
   \item{use}{if \code{"complete.obs"}, remove observations with any missing data; 
     if \code{"pairwise.complete.obs"}, compute each correlation using all observations with
     valid data for that pair of variables.}
@@ -76,7 +80,7 @@ hetcor(data, ..., ML = FALSE, std.err = TRUE, bins=4)
     \emph{Annals of Mathematical Statistics} \bold{29}, 201-211.
 }
 
-\seealso{\code{\link{polychor}}, \code{\link{polyserial}}}
+\seealso{\code{\link{polychor}}, \code{\link{polyserial}}, \code{\link[sfsmisc]{nearcor}}}
 
 \examples{
 set.seed(12345)

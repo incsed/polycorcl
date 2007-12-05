@@ -19,7 +19,6 @@
   \item{\dots}{not used.}
 }
 
-}
 \value{
   Invisibly returns \code{x}; used for its side effect --- i.e., printing.
 }

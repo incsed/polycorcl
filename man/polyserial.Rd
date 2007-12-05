@@ -23,12 +23,12 @@ polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999, bi
     ``two-step'' approximation.}
   \item{control}{optional arguments to be passed to the \code{optim} function.}
   \item{std.err}{if \code{TRUE}, return the estimated variance of the correlation (for the two-step estimator)
-    or the estimated covariance matrix of the correlation and thresholds (for the ML estimator); the default is \code{FALSE}.}
+    or the estimated covariance matrix of the correlation and thresholds (for the ML estimator);
+    the default is \code{FALSE}.}
   \item{maxcor}{maximum absolute correlation (to insure numerical stability).}
   \item{bins}{the number of bins into which to dissect \code{x} for a test of bivariate normality; the default is 4.}
 }
 
-}
 \value{
   If \code{std.err} is \code{TRUE}, 
   returns an object of class \code{"polycor"} with the following components:
