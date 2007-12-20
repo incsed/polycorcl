@@ -1,4 +1,4 @@
-# last modified 19 Oct 06 by J. Fox
+# last modified 20 Dec 07 by J. Fox
 
 "polyserial" <-
 function(x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999, bins=4){
@@ -19,7 +19,14 @@ function(x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999, bins=4){
   tab <- table(y)
   n <- sum(tab)
   s <- length(tab)
-  if (s < 2) stop("y has fewer than 2 levels")
+  if (s < 2) {
+    warning("y has fewer than 2 levels")
+    return(NA)
+    }
+  if (sum(0 != tab) < 2){
+    warning("y has fewer than 2 levels with data")
+    return(NA)
+    }
   indices <- 1:n
   cuts <- qnorm(cumsum(tab)/n)[-s]
   y <- as.numeric(as.factor(y))

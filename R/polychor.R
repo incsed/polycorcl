@@ -1,4 +1,4 @@
-# last modified 19 Oct 06 by J. Fox
+# last modified 20 Dec 07 by J. Fox
 
 "polychor" <-
 function (x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
@@ -19,10 +19,26 @@ function (x, y, ML=FALSE, control=list(), std.err=FALSE, maxcor=.9999){
      - sum(tab * log(P))
     }
   tab <- if (missing(y)) x else table(x, y)
+  zerorows <- apply(tab, 1, function(x) all(x == 0))
+  zerocols <- apply(tab, 2, function(x) all(x == 0))
+  zr <- sum(zerorows)
+  if (0 < zr) warning(paste(zr, " row", suffix <- if(zr == 1) "" else "s",
+    " with zero marginal", suffix," removed", sep=""))
+  zc <- sum(zerocols)
+  if (0 < zc) warning(paste(zc, " column", suffix <- if(zc == 1) "" else "s",
+    " with zero marginal", suffix, " removed", sep=""))
+  tab <- tab[!zerorows, ,drop=FALSE]  
+  tab <- tab[, !zerocols, drop=FALSE] 
   r <- nrow(tab)
   c <- ncol(tab)
-  if (r < 1) stop("the table has fewer than 2 rows")
-  if (c < 2) stop("the table has fewer than 2 columns")
+  if (r < 2) {
+    warning("the table has fewer than 2 rows")
+    return(NA)
+    }
+  if (c < 2) {
+    warning("the table has fewer than 2 columns")
+    return(NA)
+    }
   n <- sum(tab)
   rc <- qnorm(cumsum(rowSums(tab))/n)[-r]
   cc <- qnorm(cumsum(colSums(tab))/n)[-c]

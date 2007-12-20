@@ -43,3 +43,8 @@ o  hetcor() uses the nearcor() function in sfsmisc to insure that the correlatio
 o  small changes.
 
 
+version 0.705
+
+o  polychor() and polyserial() now return NA and report a warning when a factor is invariant (after problem report by Jose Quesada); in polychor(), empty factor levels are automatically removed.
+
+
