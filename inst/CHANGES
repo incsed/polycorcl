@@ -60,3 +60,6 @@ o  Small fix to hetcor.Rd.
 version 0.7-8
 
 o  hetcor() now accepts logical variables, treated as two-level factors (suggested by Soren Vogel).
+
+
+
