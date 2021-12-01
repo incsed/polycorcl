@@ -5,14 +5,15 @@
 
 \description{
   Computes the polyserial correlation (and its standard error)
-  between a quantitative variable and an ordinal variables, based on the assumption
+  between a quantitative variable and an ordinal variable, based on the assumption
   that the joint distribution of the quantitative variable and a latent continuous variable underlying the ordinal 
   variable is bivariate normal. Either
   the maximum-likelihood estimator or a quicker ``two-step'' approximation is available. For the ML
   estimator the estimates of the thresholds and the covariance matrix of the estimates are also available.
 }
 \usage{
-polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999, bins=4)
+polyserial(x, y, ML = FALSE, control = list(), 
+  std.err = FALSE, maxcor=.9999, bins=4, start)
 }
 
 \arguments{
@@ -29,6 +30,7 @@ polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999, bi
     the default is \code{FALSE}.}
   \item{maxcor}{maximum absolute correlation (to insure numerical stability).}
   \item{bins}{the number of bins into which to dissect \code{x} for a test of bivariate normality; the default is 4.}
+    \item{start}{optional start value(s): if a single number, start value for the correlation; if a list with the elements \code{rho} and \code{thresholds}, start values for these parameters; start values are supplied automatically if omitted, and are only relevant when the ML estimator or standard errors are selected.}
 }
 
 \value{
@@ -37,7 +39,7 @@ polyserial(x, y, ML = FALSE, control = list(), std.err = FALSE, maxcor=.9999, bi
   \item{type}{set to \code{"polyserial"}.}
   \item{rho}{the polyserial correlation.}
   \item{cuts}{estimated thresholds for the ordinal variable (\code{y}), for the ML estimator.}
-  \item{var}{the estimated variance of the correlation, or, for the ML estimator, \
+  \item{var}{the estimated variance of the correlation, or, for the ML estimator, 
     the estimated covariance matrix of the correlation and thresholds.}
   \item{n}{the number of observations on which the correlation is based.}
   \item{chisq}{chi-square test for bivariate normality.}
