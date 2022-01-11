@@ -12,7 +12,7 @@
 
 \usage{
 polychor(x, y, ML = FALSE, control = list(), 
-  std.err = FALSE, maxcor=.9999, start)
+  std.err = FALSE, maxcor=.9999, start, thresholds=FALSE)
 }
 
 \arguments{
@@ -27,10 +27,12 @@ polychor(x, y, ML = FALSE, control = list(),
   \item{std.err}{if \code{TRUE}, return the estimated variance of the correlation (for the two-step estimator) 
     or the estimated covariance matrix (for the ML estimator) of the correlation and thresholds; the default is \code{FALSE}.}
   \item{maxcor}{maximum absolute correlation (to insure numerical stability).}
-    \item{start}{optional start value(s): if a single number, start value for the correlation; if a list with the elements \code{rho}, \code{row.thresholds}, and \code{column.thresholds}, start values for these parameters; start values are supplied automatically if omitted, and are only relevant when the ML estimator or standard errors are selected.}}
+    \item{start}{optional start value(s): if a single number, start value for the correlation; if a list with the elements \code{rho}, \code{row.thresholds}, and \code{column.thresholds}, start values for these parameters; start values are supplied automatically if omitted, and are only relevant when the ML estimator or standard errors are selected.}
+    \item{thresholds}{if \code{TRUE} (the default is \code{FALSE}) return estimated thresholds along with the estimated correlation even if standard errors aren't computed.}
+}
 
 \value{
-  If \code{std.err} is \code{TRUE}, 
+  If \code{std.err} or \code{thresholds} is \code{TRUE}, 
   returns an object of class \code{"polycor"} with the following components:
   \item{type}{set to \code{"polychoric"}.}
   \item{rho}{the polychoric correlation.}
@@ -89,7 +91,6 @@ if(require(mvtnorm)){
     polychor(x, y)  # 2-step estimate
     }
 if(require(mvtnorm)){
-    set.seed(12345)
     polychor(x, y, ML=TRUE, std.err=TRUE)  # ML estimate
     }
 }
