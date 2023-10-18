@@ -186,10 +186,15 @@ hetcor.data.frame <- function(data, ML=FALSE, std.err=TRUE, use=c("complete.obs"
     rows <- rows[lower.tri(rows)]
     cols <- cols[lower.tri(cols)]
     result <- if (parallel && ncores > 1){
+        # message("Note: using a cluster of ", ncores, " cores")
+        # cl <- parallel::makeCluster(ncores)
+        # on.exit(parallel::stopCluster(cl))
+        # parallel::clusterApply(cl, 1:npairs, computeCor)
         message("Note: using a cluster of ", ncores, " cores")
-        cl <- parallel::makeCluster(ncores)
-        on.exit(parallel::stopCluster(cl))
-        parallel::clusterApply(cl, 1:npairs, computeCor)
+        #cl <- parallel::makeCluster(ncores)
+        #on.exit(parallel::stopCluster(cl))
+        parallel::clusterApply(clust, 1:npairs, computeCor)
+        
     } else {
         lapply(1:npairs, computeCor)
     }
